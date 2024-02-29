@@ -7,6 +7,6 @@ public class BowlingPark
 {
     public string Id { get; init; }
     public string Adress { get; set; }
-    public int ManagerId { get; set; }
+    public string ManagerId { get; set; }
     public IEnumerable<BowlingAlley> BowlingAlleys { get; init; }
 }

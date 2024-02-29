@@ -13,6 +13,7 @@ public interface IBowlingParkService
     BowlingParkResponse Create(BowlingParkRequest model);
     BowlingParkResponse Update(string id, BowlingParkRequest model);
     void Delete(string id);
+    IEnumerable<BowlingParkResponse> GetByManagerId(string userId);
 }
 public class BowlingParkService : IBowlingParkService
 {
@@ -81,5 +82,18 @@ public class BowlingParkService : IBowlingParkService
         
         _context.BowlingParks.Remove(bowlingPark);
         _context.SaveChanges();
+    }
+
+    public IEnumerable<BowlingParkResponse> GetByManagerId(string userId)
+    {
+        var bowlingParks = _context.BowlingParks
+            .Where(park => park.ManagerId == userId)
+            .Include(park => park.BowlingAlleys)
+            .Select(x => x.ToBowlingParkResponse());
+        
+        if (!bowlingParks.Any())
+            throw new AppException("No Bowling Park found", 404);
+        
+        return bowlingParks;
     }
 }

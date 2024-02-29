@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BowlingParkMicroService.Models.Entities;
 
-[Table("bowlingAlleys")]
+[Table("bowlingAlley")]
 public class BowlingAlley
 {
     public int AlleyNumber { get; set; }

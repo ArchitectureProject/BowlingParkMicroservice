@@ -1,4 +1,4 @@
 namespace BowlingParkMicroService.Models.DataObjectModels;
 
-public record BowlingParkRequest(string? Adress, int? ManagerId);
-public record BowlingParkResponse(string Id, string Adress, int ManagerId, List<BowlingAlleyResponse> BowlingAlleys);
+public record BowlingParkRequest(string? Adress, string? ManagerId);
+public record BowlingParkResponse(string Id, string Adress, string ManagerId, List<BowlingAlleyResponse> BowlingAlleys);

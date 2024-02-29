@@ -27,6 +27,10 @@ public class BowlingParkController : ControllerBase
     public QrCodeResponse GetByQrCode(string qrCode)
         => _bowlingParkService.GetByQrCode(qrCode);
     
+    [HttpGet("byManagerId/{userId}")]
+    public IEnumerable<BowlingParkResponse> GetByManagerId(string userId)
+        => _bowlingParkService.GetByManagerId(userId);
+    
     [HttpPost]
     public BowlingParkResponse Create(BowlingParkRequest model)
         => _bowlingParkService.Create(model);
