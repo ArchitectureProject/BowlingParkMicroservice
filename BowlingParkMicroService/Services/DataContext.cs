@@ -12,6 +12,8 @@ public class DataContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<BowlingPark>()
+            .HasKey(bowlingPark => bowlingPark.Id);
         modelBuilder.Entity<BowlingAlley>()
             .HasKey(bowlingAlley => new { bowlingAlley.BowlingParkId, bowlingAlley.AlleyNumber });
     }

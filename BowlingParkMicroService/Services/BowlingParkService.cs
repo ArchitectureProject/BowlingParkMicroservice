@@ -1,16 +1,18 @@
 using BowlingParkMicroService.Extensions;
 using BowlingParkMicroService.Helpers;
 using BowlingParkMicroService.Models.DataObjectModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace BowlingParkMicroService.Services;
 
 public interface IBowlingParkService
 {
     IEnumerable<BowlingParkResponse> GetAll();
-    BowlingParkResponse GetById(int id);
+    BowlingParkResponse GetById(string id);
+    QrCodeResponse GetByQrCode(string qrCode);
     BowlingParkResponse Create(BowlingParkRequest model);
-    BowlingParkResponse Update(int id, BowlingParkRequest model);
-    void Delete(int id);
+    BowlingParkResponse Update(string id, BowlingParkRequest model);
+    void Delete(string id);
 }
 public class BowlingParkService : IBowlingParkService
 {
@@ -22,11 +24,30 @@ public class BowlingParkService : IBowlingParkService
     }
 
     public IEnumerable<BowlingParkResponse> GetAll()
-        => _context.BowlingParks.Select(x => x.ToBowlingParkResponse());
+        => _context.BowlingParks
+            .Include(park => park.BowlingAlleys)
+            .Select(x => x.ToBowlingParkResponse());
 
-    public BowlingParkResponse GetById(int id) 
-        => _context.BowlingParks.Find(id)?.ToBowlingParkResponse() 
+    public BowlingParkResponse GetById(string id) 
+        => _context.BowlingParks
+               .Where(park => park.Id == id)
+               .Include(park => park.BowlingAlleys)
+               .FirstOrDefault()?
+               .ToBowlingParkResponse() 
            ?? throw new AppException("Bowling Park not found", 404);
+
+    public QrCodeResponse GetByQrCode(string qrCode)
+    {
+        var bowlingAlley = _context.BowlingAlleys
+                              .Where(alley => alley.QrCode == qrCode)
+                              .Include(alley => alley.BowlingPark)
+                              .FirstOrDefault() 
+                          ?? throw new AppException("Bowling Alley not found", 404);
+
+        return new QrCodeResponse(
+            bowlingAlley.BowlingParkId,
+            bowlingAlley.AlleyNumber);
+    }
 
     public BowlingParkResponse Create(BowlingParkRequest model)
     {
@@ -36,21 +57,24 @@ public class BowlingParkService : IBowlingParkService
         return bowlingPark.ToBowlingParkResponse();
     }
 
-    public BowlingParkResponse Update(int id, BowlingParkRequest model)
+    public BowlingParkResponse Update(string id, BowlingParkRequest model)
     {
-        var bowlingPark = _context.BowlingParks.Find(id) 
+        var bowlingPark = _context.BowlingParks
+                              .Where(park => park.Id == id)
+                              .Include(park => park.BowlingAlleys)
+                              .FirstOrDefault() 
                           ?? throw new AppException("Bowling Park not found", 404);
-        
-        bowlingPark.Adress = model.Adress;
-        bowlingPark.ManagerId = model.ManagerId;
-        
+
+        bowlingPark.Adress = model.Adress ?? bowlingPark.Adress;
+        bowlingPark.ManagerId = model.ManagerId ?? bowlingPark.ManagerId;
+
         _context.BowlingParks.Update(bowlingPark);
         _context.SaveChanges();
         
         return bowlingPark.ToBowlingParkResponse();
     }
 
-    public void Delete(int id) 
+    public void Delete(string id) 
     {
         var bowlingPark = _context.BowlingParks.Find(id) 
                           ?? throw new AppException("Bowling Park not found", 404);

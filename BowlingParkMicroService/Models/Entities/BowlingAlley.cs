@@ -8,6 +8,6 @@ public class BowlingAlley
     public int AlleyNumber { get; set; }
     public string QrCode { get; set; }
 
+    public string BowlingParkId { get; set; }
     public BowlingPark BowlingPark { get; set; }
-    public int BowlingParkId { get; set; }
 }
