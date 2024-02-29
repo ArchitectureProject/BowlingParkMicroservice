@@ -31,16 +31,16 @@ services.AddScoped<IBowlingParkService, BowlingParkService>();
 
 // DbContext
 services.AddDbContext<DataContext>(options =>
-    options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+{
+    var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ??
+                           "Host=localhost:5432;Database=bowlingpark-bdd;Username=admin;Password=aupGjXqZCMh9vKkQ";
+    options.UseNpgsql(connectionString);
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 app.UseCors();

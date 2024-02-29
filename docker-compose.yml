@@ -1,0 +1,40 @@
+﻿version: '3.4'
+
+networks:
+  app-network:
+    driver: bridge
+
+services:
+  bowlingpark_api:
+    image: bowlingpark_api:latest
+    depends_on:
+      - "postgres_image"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:80"
+    environment:
+      DB_CONNECTION_STRING: "Host=postgres_image:5432;Database=bowlingpark-bdd;Username=admin;Password=aupGjXqZCMh9vKkQ"
+    networks:
+      - app-network
+  
+  postgres_image:
+    image: postgres:latest
+    ports:
+      - "5432"
+    restart: always
+    volumes:
+      - db_volume:/var/lib/postgresql/data
+      - ./BowlingParkMicroService/dbscripts/seed.sql :/docker-entrypoint-initdb.d/seed.sql
+    environment:
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "aupGjXqZCMh9vKkQ"
+      POSTGRES_DB: "bowlingpark-bdd"
+    networks:
+      - app-network
+volumes:
+  db_volume:
+         
+    
+     
