@@ -20,18 +20,22 @@ public class BowlingParkController : ControllerBase
         => _bowlingParkService.GetAll();
     
     [HttpGet("{id}")]
-    public BowlingParkResponse GetById(int id)
+    public BowlingParkResponse GetById(string id)
         => _bowlingParkService.GetById(id);
+    
+    [HttpGet("fromQrCode/{qrCode}")]
+    public QrCodeResponse GetByQrCode(string qrCode)
+        => _bowlingParkService.GetByQrCode(qrCode);
     
     [HttpPost]
     public BowlingParkResponse Create(BowlingParkRequest model)
         => _bowlingParkService.Create(model);
     
     [HttpPut("{id}")]
-    public BowlingParkResponse Update(int id, BowlingParkRequest model)
+    public BowlingParkResponse Update(string id, BowlingParkRequest model)
         => _bowlingParkService.Update(id, model);
     
     [HttpDelete("{id}")]
-    public void Delete(int id)
+    public void Delete(string id)
         => _bowlingParkService.Delete(id);
 }
