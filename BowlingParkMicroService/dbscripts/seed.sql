@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS public."bowlingPark"
 (
     "Id" text COLLATE pg_catalog."default" NOT NULL,
     "Adress" text COLLATE pg_catalog."default" NOT NULL,
-    "ManagerId" integer NOT NULL,
+    "ManagerId" text NOT NULL,
     CONSTRAINT "PK_bowlingPark" PRIMARY KEY ("Id")
     )
 
@@ -17,17 +17,17 @@ CREATE TABLE IF NOT EXISTS public."bowlingPark"
 ALTER TABLE IF EXISTS public."bowlingPark"
     OWNER to admin;
 
--- Table: public.bowlingAlleys
+-- Table: public.bowlingAlley
 
--- DROP TABLE IF EXISTS public."bowlingAlleys";
+-- DROP TABLE IF EXISTS public."bowlingAlley";
 
-CREATE TABLE IF NOT EXISTS public."bowlingAlleys"
+CREATE TABLE IF NOT EXISTS public."bowlingAlley"
 (
     "AlleyNumber" integer NOT NULL,
     "BowlingParkId" text COLLATE pg_catalog."default" NOT NULL,
     "QrCode" text COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT "PK_bowlingAlleys" PRIMARY KEY ("BowlingParkId", "AlleyNumber"),
-    CONSTRAINT "FK_bowlingAlleys_bowlingPark_BowlingParkId" FOREIGN KEY ("BowlingParkId")
+    CONSTRAINT "PK_bowlingAlley" PRIMARY KEY ("BowlingParkId", "AlleyNumber"),
+    CONSTRAINT "FK_bowlingAlley_bowlingPark_BowlingParkId" FOREIGN KEY ("BowlingParkId")
     REFERENCES public."bowlingPark" ("Id") MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE CASCADE
@@ -35,5 +35,5 @@ CREATE TABLE IF NOT EXISTS public."bowlingAlleys"
 
     TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public."bowlingAlleys"
+ALTER TABLE IF EXISTS public."bowlingAlley"
     OWNER to admin;
