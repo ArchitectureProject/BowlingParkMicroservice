@@ -1,11 +1,13 @@
 using BowlingParkMicroService.Models.DataObjectModels;
 using BowlingParkMicroService.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace BowlingParkMicroService.Controllers;
 
 
 [ApiController]
 [Route("[controller]")]
+[Authorize(Policy = "AGENT")]
 public class BowlingParkController : ControllerBase
 {
     private readonly IBowlingParkService _bowlingParkService;
