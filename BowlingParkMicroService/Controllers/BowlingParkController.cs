@@ -1,11 +1,13 @@
+using System.Security.Claims;
 using BowlingParkMicroService.Models.DataObjectModels;
 using BowlingParkMicroService.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace BowlingParkMicroService.Controllers;
 
 
 [ApiController]
-[Route("[controller]")]
+[Route("[controller]"), Authorize]
 public class BowlingParkController : ControllerBase
 {
     private readonly IBowlingParkService _bowlingParkService;
@@ -15,7 +17,7 @@ public class BowlingParkController : ControllerBase
         _bowlingParkService = bowlingParkService;
     }
     
-    [HttpGet]
+    [HttpGet,Authorize(Roles = "AGENT")]
     public IEnumerable<BowlingParkResponse> GetAll()
         => _bowlingParkService.GetAll();
     
