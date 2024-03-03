@@ -25,7 +25,7 @@ public class BowlingParkController : ControllerBase
     public BowlingParkResponse GetById(string id)
         => _bowlingParkService.GetById(id);
     
-    [HttpGet("fromQrCode/{qrCode}"), Authorize(Roles = "AGENT")]
+    [HttpGet("fromQrCode/{qrCode}"), Authorize(Roles = "AGENT, CUSTOMER")]
     public QrCodeResponse GetByQrCode(string qrCode)
         => _bowlingParkService.GetByQrCode(qrCode);
     
@@ -34,7 +34,7 @@ public class BowlingParkController : ControllerBase
         => _bowlingParkService.GetByManagerId(userId);
     
     [HttpPost, Authorize(Roles = "AGENT")]
-    public BowlingParkResponse Create(BowlingParkRequest model)
+    public BowlingParkResponse Create(BowlingParkCreationRequest model)
         => _bowlingParkService.Create(model);
     
     [HttpPut("{id}"), Authorize(Roles = "AGENT")]

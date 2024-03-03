@@ -29,7 +29,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "BowlingPark", Version = "v1" });
-    c.AddSignalRSwaggerGen();
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -55,8 +54,20 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// HttpClients
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient("UserApi", httpClient =>
+{
+    httpClient.BaseAddress = new Uri(
+        Environment.GetEnvironmentVariable("USERAPI_URL") ??
+        "http://localhost:8080");
+}).AddHttpMessageHandler<AuthHandler>();
+
 // Services
 services.AddScoped<IBowlingParkService, BowlingParkService>();
+services.AddScoped<IUserApiService, UserApiService>();
+services.AddScoped<ITokenProvider, TokenProvider>();
+services.AddScoped<AuthHandler>();
 
 // DbContext
 services.AddDbContext<DataContext>(options =>
@@ -74,9 +85,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     options.SaveToken = false;
     options.IncludeErrorDetails = true;
     options.SetJwksOptions(new JwkOptions(
-        (Environment.GetEnvironmentVariable("USERAPI_URL") ?? "http://localhost:8080") + "/public_key", 
+        (Environment.GetEnvironmentVariable("USERAPI_URL") ?? "http://localhost:8080") + "/public_key",
         "UserMicroservice"
-        ));
+    ));
 });
 
 var app = builder.Build();

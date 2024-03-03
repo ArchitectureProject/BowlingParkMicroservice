@@ -10,7 +10,7 @@ public interface IBowlingParkService
     IEnumerable<BowlingParkResponse> GetAll();
     BowlingParkResponse GetById(string id);
     QrCodeResponse GetByQrCode(string qrCode);
-    BowlingParkResponse Create(BowlingParkRequest model);
+    BowlingParkResponse Create(BowlingParkCreationRequest model);
     BowlingParkResponse Update(string id, BowlingParkRequest model);
     void Delete(string id);
     IEnumerable<BowlingParkResponse> GetByManagerId(string userId);
@@ -18,10 +18,13 @@ public interface IBowlingParkService
 public class BowlingParkService : IBowlingParkService
 {
     private readonly DataContext _context;
+    private readonly IUserApiService _userApiService;
 
-    public BowlingParkService(DataContext context)
+    public BowlingParkService(DataContext context,
+        IUserApiService userApiService)
     {
         _context = context;
+        _userApiService = userApiService;
     }
 
     public IEnumerable<BowlingParkResponse> GetAll()
@@ -50,8 +53,12 @@ public class BowlingParkService : IBowlingParkService
             bowlingAlley.AlleyNumber);
     }
 
-    public BowlingParkResponse Create(BowlingParkRequest model)
+    public BowlingParkResponse Create(BowlingParkCreationRequest model)
     {
+        // Check if manager exists
+        if (!_userApiService.UserExists(model.ManagerId))
+            throw new AppException("Manager not found", 404);
+        
         var bowlingPark = model.ToEntity();
         _context.BowlingParks.Add(bowlingPark);
         _context.SaveChanges();
