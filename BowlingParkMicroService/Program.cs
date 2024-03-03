@@ -69,6 +69,7 @@ services.AddDbContext<DataContext>(options =>
 // Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
+    // it shouldn't be that in production ofc (it should be true)
     options.RequireHttpsMetadata = false;
     options.SaveToken = false;
     options.IncludeErrorDetails = true;

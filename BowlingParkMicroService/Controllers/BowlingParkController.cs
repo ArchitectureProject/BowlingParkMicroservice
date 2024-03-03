@@ -17,31 +17,31 @@ public class BowlingParkController : ControllerBase
         _bowlingParkService = bowlingParkService;
     }
     
-    [HttpGet,Authorize(Roles = "AGENT")]
+    [HttpGet, Authorize(Roles = "AGENT")]
     public IEnumerable<BowlingParkResponse> GetAll()
         => _bowlingParkService.GetAll();
     
-    [HttpGet("{id}")]
+    [HttpGet("{id}"), Authorize(Roles = "AGENT,CUSTOMER")]
     public BowlingParkResponse GetById(string id)
         => _bowlingParkService.GetById(id);
     
-    [HttpGet("fromQrCode/{qrCode}")]
+    [HttpGet("fromQrCode/{qrCode}"), Authorize(Roles = "AGENT")]
     public QrCodeResponse GetByQrCode(string qrCode)
         => _bowlingParkService.GetByQrCode(qrCode);
     
-    [HttpGet("byManagerId/{userId}")]
+    [HttpGet("byManagerId/{userId}"), Authorize(Roles = "AGENT")]
     public IEnumerable<BowlingParkResponse> GetByManagerId(string userId)
         => _bowlingParkService.GetByManagerId(userId);
     
-    [HttpPost]
+    [HttpPost, Authorize(Roles = "AGENT")]
     public BowlingParkResponse Create(BowlingParkRequest model)
         => _bowlingParkService.Create(model);
     
-    [HttpPut("{id}")]
+    [HttpPut("{id}"), Authorize(Roles = "AGENT")]
     public BowlingParkResponse Update(string id, BowlingParkRequest model)
         => _bowlingParkService.Update(id, model);
     
-    [HttpDelete("{id}")]
+    [HttpDelete("{id}"), Authorize(Roles = "AGENT")]
     public void Delete(string id)
         => _bowlingParkService.Delete(id);
 }
