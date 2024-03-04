@@ -25,7 +25,7 @@ public class BowlingParkController : ControllerBase
     public BowlingParkResponse GetById(string id)
         => _bowlingParkService.GetById(id);
     
-    [HttpGet("fromQrCode/{qrCode}"), Authorize(Roles = "AGENT, CUSTOMER")]
+    [HttpGet("fromQrCode/{qrCode}"), Authorize(Roles = "AGENT,CUSTOMER")]
     public QrCodeResponse GetByQrCode(string qrCode)
         => _bowlingParkService.GetByQrCode(qrCode);
     
